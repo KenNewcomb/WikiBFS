@@ -19,5 +19,4 @@ if len(sys.argv) is not 3:
 else:
 	keyword = sys.argv[1]
 	wikipage = sys.argv[2]
-	result = bfs.bfs(keyword, wikipage)
-	print(result)
+	path = bfs.bfs(keyword, wikipage)
