@@ -1,4 +1,4 @@
-### WikiDFS: Performs a depth-first-search on a wikipedia entry to find a keyword.
+### WikiBFS: Performs a breadth-first-search on a wikipedia entry to find a keyword.
 
 # Basic Algorithm:
 
