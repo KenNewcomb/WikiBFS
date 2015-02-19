@@ -10,6 +10,7 @@ Created on Tue Feb 17 21:22:53 2015
 import sys
 import bfs
 
+result = ""
 def usage():
 	print("Usage: run.py <keyword> <wikipedia page url>")
 
@@ -19,4 +20,12 @@ if len(sys.argv) is not 3:
 else:
 	keyword = sys.argv[1]
 	wikipage = sys.argv[2]
-	path = bfs.bfs(keyword, wikipage)
+	result = bfs.bfs(keyword, wikipage)
+
+print("Found keyword " + keyword + " within " + result.getUrl())
+print("Level: " + str(result.getLevel()))
+
+if result.getParentList is not []:
+	print("Previous clicks:")
+	for website in result.getParentList():
+		print(website)

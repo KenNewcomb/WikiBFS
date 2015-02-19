@@ -5,59 +5,58 @@ Created on Tue Feb 17 21:22:53 2015
 @author: kentropy
 """
 from bs4 import BeautifulSoup
+import copy
 import requests
 import Queue
+from classes.page import Page
 
 baseurl = "https://en.wikipedia.org"
 
 def urltoHTML(wikipage):
-        """Generates a BeautifulSoup page and pagetext for a given URL"""
-        # Get the html using Requests
-        html = requests.get(wikipage).content
+	"""Generates a BeautifulSoup page and pagetext for a given URL"""
+	# Get the html using Requests
+	html = requests.get(wikipage).content
 
-        # Feed the html into BeautifulSoup
-        page = BeautifulSoup(str(html))
-
-        return(page)
+	# Feed the html into BeautifulSoup
+	page = BeautifulSoup(str(html))
+	return(page)
 
 def bfs(keyword, wikipage):
-        """Performs a breadth first search"""
+	"""Performs a breadth first search"""
 	# Create a queue of nodes to be visited and a list of wikipedia pages to the target.
 	pagequeue = Queue.Queue()
 	visited = []
 	# Generate initial BS page object and page text.
-	pagequeue.put((wikipage, 0))
-	
-	last_depth = 0
+	pagequeue.put(Page(wikipage, 0, []))
+
 	while(pagequeue.qsize() is not 0):
 		# Dequeue next page
-		(page, depth) = pagequeue.get()
-
+		currentpage = pagequeue.get()
+		# Set page as visited
+		visited.append(currentpage.getUrl())
 		# Get HTML from URL
-		pageHTML = urltoHTML(page)
+		pageHTML = urltoHTML(currentpage.getUrl())
 		
 		# Get page text from HTML
 		pagetext = pageHTML.get_text()		
-	
+
         	# Check to see if the keyword is in page's text.
         	if keyword in pagetext:
-			print(keyword)
-        		print(str(depth) + " " + page)
-			print("FOUND")
-		
-		if depth > last_depth: 
-			last_depth += 1 
-			print(str(depth) + " " + page)
+			return currentpage
+	
 		urllist = []
-
+		
 		# Find all urls
 		for link in pageHTML.find_all("a", href=True):
 			if link['href'].encode('utf-8').startswith("/"):
 				url = baseurl + link['href']
 				urllist.append(url)
+		
+		# Build list of parents
+		parentlist = copy.deepcopy(currentpage.getParentList())
+		parentlist.append(currentpage.getUrl())
 	
 		for url in urllist:
 			if url not in visited:
-				visited.append(url)
-				pagequeue.put((url, depth+1))
+				pagequeue.put(Page(url, currentpage.getLevel() +1, parentlist))
 	return None
