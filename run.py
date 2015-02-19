@@ -21,15 +21,18 @@ if len(sys.argv) is not 3:
 else:
 	keyword = sys.argv[1]
 	wikipage = sys.argv[2]
-	print("Locating " + keyword + "..."),
+	print("Locating " + keyword + "...")
 	sys.stdout.flush()
 	result = bfs.bfs(keyword, wikipage)
 
 print("Found!\n")
-print("Located " + keyword + " within " + result.getUrl())
-print("Level: " + str(result.getLevel()))
-
+print("Minimum Path: (" + str(result.getLevel()) + " clicks)")
+print(result.getUrl())
 if result.getParentList is not []:
-	print("Previous clicks:")
+	hyphencount = 3
 	for website in result.getParentList():
+		for count in range(0, hyphencount):
+			print("-"),
+		print("> "),
 		print(website)
+		hyphencount += 3

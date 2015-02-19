@@ -26,12 +26,19 @@ def bfs(keyword, wikipage):
 	# Create a queue of nodes to be visited and a list of wikipedia pages to the target.
 	pagequeue = Queue.Queue()
 	visited = []
+
 	# Generate initial BS page object and page text.
 	pagequeue.put(Page(wikipage, 0, []))
-
+	
+	currentLevel = 0
 	while(pagequeue.qsize() is not 0):
 		# Dequeue next page
 		currentpage = pagequeue.get()
+		
+		# Check if queue is part of next generation of links
+		if currentpage.getLevel() > currentLevel:
+			currentLevel += 1
+			print("Scanning hyperlinks on level " + str(currentLevel) + ".")
 		# Set page as visited
 		visited.append(currentpage.getUrl())
 		# Get HTML from URL
@@ -48,7 +55,7 @@ def bfs(keyword, wikipage):
 		
 		# Find all urls
 		for link in pageHTML.find_all("a", href=True):
-			if link['href'].encode('utf-8').startswith("/wiki"):
+			if link['href'].encode('utf-8').startswith("/wiki") and ("#" not in link['href'].encode('utf-8')):
 				url = baseurl + link['href']
 				urllist.append(url)
 		
