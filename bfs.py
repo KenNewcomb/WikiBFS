@@ -9,7 +9,7 @@ import copy
 import requests
 import Queue
 from classes.page import Page
-
+import time
 baseurl = "https://en.wikipedia.org"
 
 def urltoHTML(wikipage):
@@ -51,19 +51,14 @@ def bfs(keyword, wikipage):
         	if keyword in pagetext:
 			return currentpage
 	
-		urllist = []
-		
-		# Find all urls
-		for link in pageHTML.find_all("a", href=True):
-			if link['href'].encode('utf-8').startswith("/wiki") and ("#" not in link['href'].encode('utf-8')):
-				url = baseurl + link['href']
-				urllist.append(url)
-		
 		# Build list of parents
 		parentlist = copy.deepcopy(currentpage.getParentList())
 		parentlist.append(currentpage.getUrl())
-	
-		for url in urllist:
-			if url not in visited:
-				pagequeue.put(Page(url, currentpage.getLevel() +1, parentlist))
+
+		# Find all urls
+		for link in pageHTML.find_all("a", href=True):
+			if baseurl + link['href'].encode('utf-8') not in visited and link['href'].encode('utf-8').startswith("/wiki") and ("#" not in link['href'].encode('utf-8')) and (":" not in link['href'].encode('utf-8')):
+				url = baseurl + link['href']
+				visited.append(url)
+				pagequeue.put(Page(url, currentpage.getLevel() + 1, parentlist))
 	return None

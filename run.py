@@ -30,7 +30,7 @@ print("Minimum Path: (" + str(result.getLevel()) + " clicks)")
 print(result.getUrl())
 if result.getParentList is not []:
 	hyphencount = 3
-	for website in result.getParentList():
+	for website in reversed(result.getParentList()):
 		for count in range(0, hyphencount):
 			print("-"),
 		print("> "),
