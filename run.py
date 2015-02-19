@@ -9,8 +9,10 @@ Created on Tue Feb 17 21:22:53 2015
 
 import sys
 import bfs
+from classes.page import Page
 
 result = ""
+parentlist = []
 def usage():
 	print("Usage: run.py <keyword> <wikipedia page url>")
 
@@ -20,19 +22,7 @@ if len(sys.argv) is not 3:
 	sys.exit(0)
 else:
 	keyword = sys.argv[1]
-	wikipage = sys.argv[2]
+	url = sys.argv[2]
 	print("Locating " + keyword + "...")
 	sys.stdout.flush()
-	result = bfs.bfs(keyword, wikipage)
-
-print("Found!\n")
-print("Minimum Path: (" + str(result.getLevel()) + " clicks)")
-print(result.getUrl())
-if result.getParentList is not []:
-	hyphencount = 3
-	for website in reversed(result.getParentList()):
-		for count in range(0, hyphencount):
-			print("-"),
-		print("> "),
-		print(website)
-		hyphencount += 3
+	result = bfs.bfsrecur(Page(url, 0, []), keyword)
