@@ -17,6 +17,7 @@ def usage():
 # Parse user input (run.py microsoft https://en.wikipedia.org/Apple)
 if len(sys.argv) is not 3:
 	usage()
+	sys.exit(0)
 else:
 	keyword = sys.argv[1]
 	wikipage = sys.argv[2]
