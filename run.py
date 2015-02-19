@@ -21,9 +21,12 @@ if len(sys.argv) is not 3:
 else:
 	keyword = sys.argv[1]
 	wikipage = sys.argv[2]
+	print("Locating " + keyword + "..."),
+	sys.stdout.flush()
 	result = bfs.bfs(keyword, wikipage)
 
-print("Found keyword " + keyword + " within " + result.getUrl())
+print("Found!\n")
+print("Located " + keyword + " within " + result.getUrl())
 print("Level: " + str(result.getLevel()))
 
 if result.getParentList is not []:
