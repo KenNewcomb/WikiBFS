@@ -48,9 +48,10 @@ def bfs(keyword, wikipage):
 		
 		# Find all urls
 		for link in pageHTML.find_all("a", href=True):
-			if link['href'].encode('utf-8').startswith("/"):
+			if link['href'].encode('utf-8').startswith("/wiki"):
 				url = baseurl + link['href']
 				urllist.append(url)
+				print(url)
 		
 		# Build list of parents
 		parentlist = copy.deepcopy(currentpage.getParentList())
