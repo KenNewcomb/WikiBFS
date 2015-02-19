@@ -1,7 +1,7 @@
 WikiBFS
 =======
 
-Given a Wikipedia article URL and a keyword, WikiBFS performs a [breadth-first search](https://en.wikipedia/wiki/Breadth-first_search) to find the given search query. WikiBFS first searches the given Wikipedia page for the query string. If the string is not found, it then searches every hyperlink on the page. The algorithm continues until the keyword is found.
+Given a Wikipedia article URL and a keyword, WikiBFS performs a [breadth-first search](https://en.wikipedia.com/wiki/Breadth-first_search) to find the given search query. WikiBFS first searches the given Wikipedia page for the query string. If the string is not found, it then searches every hyperlink on the page. The algorithm continues until the keyword is found.
 
 Usage
 ------
