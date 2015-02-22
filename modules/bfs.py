@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Tue Feb 17 21:22:53 2015
 
@@ -7,36 +6,35 @@ Created on Tue Feb 17 21:22:53 2015
 from bs4 import BeautifulSoup
 import copy
 import requests
-import queue
 from classes.page import Page
 import threading
 import time
 
-baseurl = "https://en.wikipedia.org"
+baseurl = "https://en.wikipedia.org" # for the processing of relative urls
 found = False
 visited = []
 currentlevel = 0
-max_threads = 30	
+max_threads = 20	
 active_threads = 0
 num_urls = 0
 active_parents = []
 
 def urltoHTML(wikipage):
+	"""Fetches a BeautifulSoup page and pagetext for a given URL"""
 	global active_threads
 	active_threads += 1
-	"""Generates a BeautifulSoup page and pagetext for a given URL"""
+
 	# Get the html using Requests
-	#print("Requesting wikipage:   " + wikipage)
 	html = requests.get(wikipage).content
 
 	# Feed the html into BeautifulSoup
 	page = BeautifulSoup(str(html))
-	#print("Page received:   " + wikipage)
+
 	active_threads -= 1
 	return(page)
 	
 def printOutput(page):
-	"""Prints output"""
+	"""Print the results of the search to the screen."""
 	print("Found!\n")
 	print("Minimum Path: (" + str(page.getLevel()) + " clicks)")
 	hyphencount = 1
@@ -45,12 +43,13 @@ def printOutput(page):
 	for website in urls:
 		for count in range(0, hyphencount):
 			print("-", end="", flush=True)
-		print("> ",  end="", flush=True)
+			if count != 0: 
+				print("> ",  end="", flush=True)
 		print(website)
 		hyphencount += 3
-			
+	print("Killing leftover threads, just a second...")			
 
-def bfsrecur(page, keyword):
+def bfs(page, keyword):
 	global found, currentlevel, active_threads, max_threads, active_parents
 	if found is True:
 		return
@@ -68,6 +67,7 @@ def bfsrecur(page, keyword):
 	if keyword in pagetext:
 		found = True
 		printOutput(page)
+		return
 		
 	# Build list of parents
 	parentlist = copy.deepcopy(page.getParentList())
@@ -85,6 +85,6 @@ def bfsrecur(page, keyword):
 					t = threading.Thread(target=bfsrecur, args = (Page(url, page.getLevel() + 1, parentlist),keyword))
 					t.start()
 					break
-				time.sleep(0.5)
+				time.sleep(0.3)
 				
 	active_parents.pop(active_parents.index(page.getLevel()))
